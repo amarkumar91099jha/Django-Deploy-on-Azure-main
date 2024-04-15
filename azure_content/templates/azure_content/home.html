@@ -11,7 +11,7 @@
                     Start New Survey
                 </div>
                 <div class="factbox-fact"> 
-                    <a class="iconcolor" href="{% url 'location-views'%}"> <i class="fas fa-plus-circle"></i> </a>
+                    <a class="iconcolor" href="{% url 'location-views'%}"> <i class="fas fa-plus-circle" style="color: #6F53E5;"></i> </a>
                 </div>
             </div>
 
@@ -19,16 +19,16 @@
                 <div class="factbox-title"> 
                     <i class="fas fa-project-diagram mr-2"></i> # entries
                 </div>
-                <div class="factbox-fact"> 
+                <div class="factbox-fact" style="color: #6F53E5;"> 
                     {{ project_list|length }}
                 </div>
             </div>
 
             <div class="factbox2">
-                <div class="factbox-title"> 
+                <div class="factbox-title" > 
                     <i class="fas fa-chart-line mr-2"></i> Channel
                 </div>
-                <div class="factbox-fact"> 
+                <div class="factbox-fact" style="color: #6F53E5;"> 
                  Amar Kumar
                 </div>
             </div>
@@ -39,7 +39,7 @@
                    <i class="fas fa-times-circle mr-2"></i> Go to the about page
                 </div>
                 <div class="factbox-fact"> 
-                    <a href="{% url 'about'%}"> <i class="fas fa-play"></i></a>
+                    <a href="{% url 'about'%}"> <i class="fas fa-play" style="color: #6F53E5;"></i></a>
                 </div>
             </div>
 
@@ -49,12 +49,12 @@
         
         <div class="shadowholder">
             <div class="subtitel2"> 
-                <div> <i class="fas fa-sticky-note mr-2"></i> My data </div>
+                <div style="color: #6F53E5;"> <i class="fas fa-sticky-note" style="color: #6F53E5;"></i> My data </div>
             </div>
                 <div class="content mb-3"> 
-                    <table id="example5" class="beheertable" style="width:100%">
+                    <table id="example5" class="beheertable" style="width:100% ">
                         <thead>
-                            <tr>
+                            <tr style="color: #6F53E5;">
                                 <th>ID</th>
                                 <th>Address</th>
                                 <th>Description</th>
@@ -69,12 +69,12 @@
                         <tbody>
                              {%for a in project_list%}
                                 <tr>
-                                    <td><a href="#">{{a.id}}</a> </td>
+                                    <td style="color: #6F53E5;"><a href="{% url 'edit' a.id%}">{{a.id}}</a> </td>
                                     <td> {{a.address}} </td>
-                                    <td>Details</td>
+                                    <td style="color: #6F53E5;"><a href="#">Details</a></td>
                                     <td> {{a.created_at|date:'d-m-Y H:i'}}</td>
-                                    <td> {{a.edited_at|date:'d-m-Y H:i'}}</td>
-                                    <td> <a href="{% url 'delete' a.id%}">delete</a></td>
+                                    <td> {{a.updated_at|date:'d-m-Y H:i'}}</td>
+                                    <td style="color: #6F53E5;"> <a href="{% url 'delete' a.id%}">delete</a></td>
                                 </tr>
                              {%endfor%}
 

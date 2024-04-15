@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.core.serializers.json import DjangoJSONEncoder
 import json
 from .models import *
 
@@ -13,7 +14,7 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         addresses = BuildingAddress.objects.all().values()
-        addresses_json = json.dumps(list(addresses))
+        addresses_json = json.dumps(list(addresses), cls=DjangoJSONEncoder)
         context['address'] = addresses_json
         return context
 
@@ -65,6 +66,35 @@ def buildingAddress_input(request):
 
     return render(request, "azure_content/create.html")
 
+def buildingAddress_edit(request,building_id):
+    building_address=BuildingAddress.objects.get(id=building_id)
+    if request.method == 'POST':
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+        address=request.POST.get('address')
+        customer_type=request.POST.get('customer_type')
+        # Add other fields as needed
+
+        # Create or update UserAddress
+        # building_address=BuildingAddress.objects.get(id=building_id)
+        building_address.latitude = latitude,
+        building_address.longitude = longitude,
+        building_address.address=address,
+        building_address.customer_type=customer_type
+        building_address.save()
+
+        
+        
+        messages.success(request, 'Building Address collected successfully!')
+        if customer_type=="Resilience AI Customer":
+            return redirect('resiliance-views',building_id=building_address.id)
+        else:
+            return redirect('individual-views',building_id=building_address.id)
+
+    return render(request, "azure_content/create.html", {
+        "building_id":building_id,
+        "building_address":building_address
+    })
 
 
 def IndividualView(request,building_id):

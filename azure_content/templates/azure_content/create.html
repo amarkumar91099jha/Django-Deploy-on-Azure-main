@@ -5,7 +5,7 @@
 
 <div class="shadowholder">
     <div class="subtitel2"> 
-        <div style="text-align:center;"> <i class="fas fa-map-marker-alt mr-2"></i>  My data </div>
+        <div style="text-align:center;"> <i class="fas fa-map-marker-alt mr-2"></i> Pick Location </div>
     </div>
         <div class="content mb-3"> 
             <div class="container mt-5">
@@ -15,6 +15,7 @@
                         <form method="post" action="#">
                             {% csrf_token %}
                             <!-- Add fields to collect user address -->
+                            {% if "edit" not in request.path%}
                             <div class="form-group" style="max-width: 350px;">
                                 <label for="latitude">Latitude:</label>
                                 <input style="border-color:#6F53E5;" type="text" class="form-control" id="latitude" name="latitude" >
@@ -34,6 +35,28 @@
                                     <option value="Individual">Individual</option>
                                 </select>
                             </div>
+                            {%else%}
+                            <div class="form-group" style="max-width: 350px;">
+                                <label for="latitude">Latitude:</label>
+                                <input value="{{building_address.latitude}}" style="border-color:#6F53E5;" type="text" class="form-control" id="latitude" name="latitude" >
+                            </div>
+                            <div class="form-group" style="max-width: 350px;">
+                                <label for="longitude">Longitude:</label>
+                                <input value={{building_address.longitude}} style="border-color:#6F53E5;" type="text" class="form-control" id="longitude" name="longitude" >
+                            </div>
+                            <div class="form-group" style="max-width: 350px;">
+                                <label for="address">Address:</label>
+                                <input value="{{building_address.address}}" style="border-color:#6F53E5;" type="text" class="form-control" id="address" name="address" >
+                            </div>
+                            <div class="form-group" style="max-width: 350px;">
+                                <label for="customer_type">Are you a Resilience AI customer or an individual?</label>
+                                <select style="border-color:#6F53E5;" class="form-control" id="customer_type" name="customer_type">
+                                    <option value="Resilience AI Customer">Resilience AI Customer</option>
+                                    <option value="Individual">Individual</option>
+                                </select>
+                            </div>
+                            {%endif%}
+
                             <button style="text-align:center; background-color:#6F53E5;color:white;margin-top:12px;" class="btn " type="button" onclick="getCurrentLocation()">Get Current Location</button>
                             {% comment %} <button style="text-align:center; background-color:#6F53E5;color:white;" class="btn " type="button" onclick="postData()">Next</button>                            </div> {% endcomment %}
             

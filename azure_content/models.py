@@ -16,6 +16,8 @@ class BuildingAddress(models.Model):
     longitude=models.CharField(max_length=20, null=True)
     address = models.TextField(null=True)
     customer_type=models.CharField(max_length=100, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     # Add other fields for user address
 class IndividualCustomerData(models.Model):
