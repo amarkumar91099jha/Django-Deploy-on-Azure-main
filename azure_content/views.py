@@ -50,24 +50,25 @@ def buildingAddress_input(request):
         # Add other fields as needed
 
         # Create or update UserAddress
-        building_address,created=BuildingAddress.objects.get_or_create(
-            latitude = latitude,
-            longitude = longitude,
-            address=address,
-            customer_type=customer_type
+        if latitude and longitude:
+            building_address,created=BuildingAddress.objects.get_or_create(
+                latitude = latitude,
+                longitude = longitude,
+                address=address,
+                customer_type=customer_type
 
-        )
+            )
         
-        messages.success(request, 'Building Address collected successfully!')
-        if customer_type=="Resilience AI Customer":
-            return redirect('resiliance-views',building_id=building_address.id)
-        else:
-            return redirect('individual-views',building_id=building_address.id)
+            messages.success(request, 'Building Address collected successfully!')
+            if customer_type=="Resilience AI Customer":
+                return redirect('resiliance-views',building_id=building_address.id)
+            else:
+                return redirect('individual-views',building_id=building_address.id)
 
     return render(request, "azure_content/create.html")
 
 def buildingAddress_edit(request,building_id):
-    building_address=BuildingAddress.objects.get(id=building_id)
+    building_addres=BuildingAddress.objects.get(id=building_id)
     if request.method == 'POST':
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
@@ -77,23 +78,26 @@ def buildingAddress_edit(request,building_id):
 
         # Create or update UserAddress
         # building_address=BuildingAddress.objects.get(id=building_id)
-        building_address.latitude = latitude,
-        building_address.longitude = longitude,
-        building_address.address=address,
-        building_address.customer_type=customer_type
-        building_address.save()
+        if latitude and longitude:
+            building_address,created=BuildingAddress.objects.get_or_create(id=building_id)
+            building_address.latitude = latitude
+            building_address.longitude = longitude
+            building_address.address=address
+            building_address.customer_type=customer_type
+            building_address.save()
 
-        
-        
-        messages.success(request, 'Building Address collected successfully!')
-        if customer_type=="Resilience AI Customer":
-            return redirect('resiliance-views',building_id=building_address.id)
-        else:
-            return redirect('individual-views',building_id=building_address.id)
 
-    return render(request, "azure_content/create.html", {
+            
+            print(latitude)
+            messages.success(request, 'Building Address collected successfully!')
+            if customer_type=="Resilience AI Customer":
+                return redirect('resiliance-views',building_id=building_address.id)
+            else:
+                return redirect('individual-views',building_id=building_address.id)
+
+    return render(request, "azure_content/edit.html", {
         "building_id":building_id,
-        "building_address":building_address
+        "building_address":building_addres
     })
 
 
@@ -193,4 +197,3 @@ def CustomerView(request, building_id):
     return render(request, 'azure_content/Resiliance.html',{
         "building_id":building_location.id
     })
-
