@@ -22,15 +22,15 @@ class BuildingAddress(models.Model):
     # Add other fields for user address
 class IndividualCustomerData(models.Model):
     questions={
-        "question-1":"What is the built up area of the building?",
-        "question-2":"What is the age of the building?",
-        "question-3":"What are the number of floors or storeys in the building?",
-        "question-4":"What is your building structure?",
-        "question-5":"What is the structural material of the walls of your building?",
-        "question-6":"What is the structural material of the roof of your building?",
-        "question-7":"What visible damage does the building have?",
-        "question-8":"Number of buildings (density) within 100m perimeter of your building?",
-        "question-9":"Are there any tall trees or high tension lines near your building that could fall during storm or cyclone?",
+        "question_1":"What is the built up area of the building?",
+        "question_2":"What is the age of the building?",
+        "question_3":"What are the number of floors or storeys in the building?",
+        "question_4":"What is your building structure?",
+        "question_5":"What is the structural material of the walls of your building?",
+        "question_6":"What is the structural material of the roof of your building?",
+        "question_7":"What visible damage does the building have?",
+        "question_8":"Number of buildings (density) within 100m perimeter of your building?",
+        "question_9":"Are there any tall trees or high tension lines near your building that could fall during storm or cyclone?",
         
     }
     building_id=models.OneToOneField(BuildingAddress, on_delete=models.CASCADE)
@@ -46,15 +46,27 @@ class IndividualCustomerData(models.Model):
 
 class ResilianceCustomerData(models.Model):
         questions={
-        "question-1":"What is the built up area of the building?",
-        "question-2":"What is the age of the building?",
-        "question-3":"What are the number of floors or storeys in the building?",
-        "question-4":"What is your building structure?",
-        "question-5":"What is the structural material of the walls of your building?",
-        "question-6":"What is the structural material of the roof of your building?",
-        "question-7":"What visible damage does the building have?",
-        "question-8":"Number of buildings (density) within 100m perimeter of your building?",
-        "question-9":"Are there any tall trees or high tension lines near your building that could fall during storm or cyclone?",
+        "question_1":"What is the built up area of the building?",
+        "question_2":"What is the age of the building?",
+        "question_3":"What are the number of floors or storeys in the building?",
+        "question_4":"What is your building structure?",
+        "question_5":"What is the structural material of the walls of your building?",
+        "question_6":"What is the structural material of the roof of your building?",
+        "question_7":"What visible damage does the building have?",
+        "question_8":"Number of buildings (density) within 100m perimeter of your building?",
+        "question_9":"Are there any tall trees or high tension lines near your building that could fall during storm or cyclone?",
+        "question_10":"What is the type of the walls?",
+        "question_11":"Is your building structure fire-resistive ?",
+        "question_12":"How many openings are there in your building ?",
+        "question_13":"Dose the house has plinth protection ?",
+        "question_14":"What is the soft storey impact of the structure ?",
+        "question_15":"What is condition of the exterior walls, windows and doors in terms of durability and resistance to external forces(wind impact)?",
+        "question_16":"Details of cracks within the house (length in meters)?",
+        "question_17":"Type of climate event?",
+        "question_18":"What are the visible damage in the overall building columns or structural wall?",
+        "question_19":"What is the visible damage in walls?",
+        "question_20":"What is the magnitude of roof damage?",
+        "question_21":"What is the damage to the building/premise?",
         
         }
         building_id=models.OneToOneField(BuildingAddress, on_delete=models.CASCADE)

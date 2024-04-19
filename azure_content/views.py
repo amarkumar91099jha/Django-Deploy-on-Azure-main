@@ -197,3 +197,16 @@ def CustomerView(request, building_id):
     return render(request, 'azure_content/Resiliance.html',{
         "building_id":building_location.id
     })
+
+
+def buildingAddress_details(request,building_id):
+    building_detail=BuildingAddress.objects.get(id=building_id)
+    if building_detail.customer_type=="Resilience AI Customer":
+        building_details=ResilianceCustomerData.objects.get(building_id_id=building_id)
+    else:
+        building_details=IndividualCustomerData.objects.get(building_id_id=building_id)
+    return render(request, "azure_content/details.html",{
+        "building_details":building_detail,
+        "building_detail":building_details
+    })
+
