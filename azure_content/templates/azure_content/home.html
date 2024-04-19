@@ -56,8 +56,10 @@
                         <thead>
                             <tr style="color: #6F53E5;">
                                 <th>ID</th>
+                                
                                 <th>Address</th>
                                 <th>Description</th>
+                                <th>Edit</th>
                                 <th>Created at</th>
                                 <th>Edited at</th>
                                 <th>Delete</th>
@@ -69,12 +71,14 @@
                         <tbody>
                              {%for a in project_list%}
                                 <tr>
-                                    <td style="color: #6F53E5;"><a href="{% url 'edit' a.id%}">{{a.id}}</a> </td>
+                                    <td style="color: #6F53E5;">{{a.id}}</td>
+                                    
                                     <td> {{a.address}} </td>
-                                    <td style="color: #6F53E5;"><a href="#">Details</a></td>
+                                    <td style="color: #6F53E5;"><a style="color:#6F53E5;" href="#">Details</a></td>
+                                    <td><a href="{% url 'edit' a.id%}"><i style="color:#6F53E5;" class="fas fa-edit"></i></a></td>
                                     <td> {{a.created_at|date:'d-m-Y H:i'}}</td>
                                     <td> {{a.updated_at|date:'d-m-Y H:i'}}</td>
-                                    <td style="color: #6F53E5;"> <a href="{% url 'delete' a.id%}">delete</a></td>
+                                    <td style="color: #6F53E5;"> <a href="{% url 'delete' a.id%}"><i style="color:#6F53E5;" class="fas fa-trash-alt"></i></a></td>
                                 </tr>
                              {%endfor%}
 
