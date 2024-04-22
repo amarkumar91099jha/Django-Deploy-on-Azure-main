@@ -50,7 +50,7 @@ def buildingAddress_input(request):
         # Add other fields as needed
 
         # Create or update UserAddress
-        if latitude and longitude:
+        if latitude and longitude and address:
             building_address,created=BuildingAddress.objects.get_or_create(
                 latitude = latitude,
                 longitude = longitude,
