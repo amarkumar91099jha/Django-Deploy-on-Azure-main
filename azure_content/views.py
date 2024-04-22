@@ -21,11 +21,11 @@ class HomeView(ListView):
 class AboutView(TemplateView):
     template_name = "azure_content/about.html"
 
-class ProjectCreateView(CreateView):
-    model = Project
-    fields = ['name', 'description']
-    template_name = "azure_content/create.html"
-    success_url ="/"
+# class ProjectCreateView(CreateView):
+#     model = Project
+#     fields = ['name', 'description']
+#     template_name = "azure_content/create.html"
+#     success_url ="/"
 
 # class ProjectEditView(UpdateView):
 #     model = BuildingAddress
@@ -78,7 +78,7 @@ def buildingAddress_edit(request,building_id):
 
         # Create or update UserAddress
         # building_address=BuildingAddress.objects.get(id=building_id)
-        if latitude and longitude:
+        if latitude and longitude and address:
             building_address,created=BuildingAddress.objects.get_or_create(id=building_id)
             building_address.latitude = latitude
             building_address.longitude = longitude
