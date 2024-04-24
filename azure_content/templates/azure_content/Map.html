@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        /*
+         * Always set the map height explicitly to define the size of the div element
+         * that contains the map.
+         */
+         #map-container {
+            position: relative;
+            height: 100%;
+        }
+
+        #map {
+            height: 100%;
+        }
+
+        .dropdown {
+            display: inline-block;
+            position: absolute;
+            background-color:#7e22ce;
+            color:white;
+            top: 90px;
+            left: 10px;
+            z-index: 999;
+            border-radius:12px;
+        }
+    
+        /* Style the dropdown content (hidden by default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: none;
+            min-width: 160px;
+            max-height: 70vh; /* Set maximum height to 80% of viewport height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+    
+        /* Style the buttons inside the dropdown content */
+        .dropdown-content button {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius:12px;
+            margin-top:5px;
+            margin-bottom:5px;
+        }
+    
+        /* Add a hover effect to the buttons */
+        .dropdown-content button:hover {
+            background-color: #000;
+        }
+    
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    
+        /* Style the button that will be shown as the dropdown title */
+        .dropdown button {
+            background-color: #7e22ce;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius:12px;
+        }
+    
+        /* Add a darker background color to the dropdown button when the dropdown content is shown */
+        .dropdown:hover button {
+            background-color: #a21caf;
+        }
+    
+        /*
+         * Optional: Makes the sample page fill the window.
+         */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #legend {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: #7e22ce;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height:100px;
+            margin-right:20px;
+            border: 1px solid #ccc;
+        }
+        #info-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: none;
+            padding: 10px;
+            
+            border-radius: 5px;
+            color:white;
+            margin-bottom:60px;
+        }
+
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-item div {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        /* Tailwind CSS equivalent classes */
+        .bg-purple-700 {
+            background-color: #7e22ce;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .mx-1 {
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+        }
+
+        .my-1 {
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2ioW3WXrv2bEaNdh438OKkOZzGd0nBsA&callback=initMap"></script>
+</head>
+
+<body>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="dropdown">
+            <button class="dropbtn">Select Region</button>
+            <div class="dropdown-content">
+              <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/delhi_final_house_level_4326.geojson')">
+                  <span >Delhi</span>
+                  <svg height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier"> <path style="fill:#db6300;" d="M362.99,450.016l-23.462,53.363l-51.009-28.217c-11.699-6.471-26.091-5.552-36.87,2.356L204.647,512 l-30.066-49.942c-6.895-11.453-19.821-17.853-33.11-16.394l-57.945,6.362l-1.067-58.283c-0.245-13.366-8.238-25.372-20.477-30.752 L8.62,339.528l28.217-51.009c6.471-11.699,5.552-26.091-2.356-36.87L0,204.647l49.942-30.066 c11.453-6.895,17.853-19.821,16.394-33.11l-6.362-57.945l58.283-1.067c13.366-0.245,25.372-8.238,30.752-20.477L172.472,8.62 l51.009,28.217c11.699,6.471,26.091,5.552,36.87-2.356L307.353,0l30.066,49.942c6.895,11.453,19.821,17.853,33.11,16.394 l57.945-6.362l1.067,58.283c0.245,13.366,8.238,25.372,20.477,30.752l53.363,23.462l-28.217,51.009 c-6.471,11.699-5.552,26.091,2.356,36.87L512,307.353l-49.942,30.066c-11.453,6.895-17.853,19.821-16.394,33.11l6.362,57.945 l-58.283,1.067C380.376,429.784,368.371,437.778,362.99,450.016z"/> <circle style="fill:#ffb042;" cx="256" cy="256" r="169.566"/> <path style="opacity:0.11;fill:#663A00;enable-background:new ;" d="M477.517,260.351c-7.908-10.779-8.828-25.173-2.356-36.87 l28.217-51.009l-48.863-21.484c0.036,1.789,0.068,3.578,0.068,5.375c0,148.676-120.526,269.202-269.202,269.202 c-36.376,0-71.058-7.231-102.71-20.308l0.856,46.769l57.945-6.362c13.289-1.459,26.214,4.94,33.11,16.394L204.647,512l47.001-34.483 c10.779-7.908,25.173-8.828,36.87-2.356l51.009,28.217l23.462-53.363c5.381-12.238,17.386-20.231,30.752-20.477l58.283-1.067 l-6.362-57.945c-1.459-13.289,4.94-26.214,16.394-33.11L512,307.353L477.517,260.351z"/> <path style="fill:#FFEB99;" d="M142.57,263.837c-4.328,0-7.837-3.509-7.837-7.837c0-66.867,54.401-121.267,121.267-121.267 c4.328,0,7.837,3.509,7.837,7.837c0,4.328-3.509,7.837-7.837,7.837c-58.225,0-105.593,47.368-105.593,105.593 C150.407,260.328,146.898,263.837,142.57,263.837z"/> </g>
+                    </svg>
+              </button>
+              <button id="loadDataButton" onclick="loadData('https://ressolv-test-app.azurewebsites.net/geojson/')">
+                <span >Chennai</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/ernakulam_final_house_level_4326.geojson')">
+                <span >Ernakulam</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/gangtok_city_final_house_level_4326.geojson')">
+                <span >Gangtok</span>
+                <svg fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 232 256" width="25px" height="25px" enable-background="new 0 0 232 256" xml:space="preserve" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M165.414,51.041l2.671-41.985l-23.135-1.472L143.63,28.28L118.298,2L22.797,77.129l12.752,16.35l14.738-11.693 l-5.816,91.399l124.664,7.933l5.766-90.623l12.903,13.447l15.06-14.193L165.414,51.041z M127.764,136.291l-33.164-2.581 l2.581-33.164l33.164,2.581L127.764,136.291z M229.909,187.469V254H2.091v-66.531h153.726l24.697,21.169l-28.225,14.113 l27.217,25.201l-12.096-24.193l35.281-13.105l-16.945-23.185H229.909z"></path> </g></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/gautambudh_final_house_level_4326.geojson')">
+                <span >Gauthambudha Nagar</span>
+                <svg height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier"> <path style="fill:#db6300;" d="M362.99,450.016l-23.462,53.363l-51.009-28.217c-11.699-6.471-26.091-5.552-36.87,2.356L204.647,512 l-30.066-49.942c-6.895-11.453-19.821-17.853-33.11-16.394l-57.945,6.362l-1.067-58.283c-0.245-13.366-8.238-25.372-20.477-30.752 L8.62,339.528l28.217-51.009c6.471-11.699,5.552-26.091-2.356-36.87L0,204.647l49.942-30.066 c11.453-6.895,17.853-19.821,16.394-33.11l-6.362-57.945l58.283-1.067c13.366-0.245,25.372-8.238,30.752-20.477L172.472,8.62 l51.009,28.217c11.699,6.471,26.091,5.552,36.87-2.356L307.353,0l30.066,49.942c6.895,11.453,19.821,17.853,33.11,16.394 l57.945-6.362l1.067,58.283c0.245,13.366,8.238,25.372,20.477,30.752l53.363,23.462l-28.217,51.009 c-6.471,11.699-5.552,26.091,2.356,36.87L512,307.353l-49.942,30.066c-11.453,6.895-17.853,19.821-16.394,33.11l6.362,57.945 l-58.283,1.067C380.376,429.784,368.371,437.778,362.99,450.016z"/> <circle style="fill:#ffb042;" cx="256" cy="256" r="169.566"/> <path style="opacity:0.11;fill:#663A00;enable-background:new ;" d="M477.517,260.351c-7.908-10.779-8.828-25.173-2.356-36.87 l28.217-51.009l-48.863-21.484c0.036,1.789,0.068,3.578,0.068,5.375c0,148.676-120.526,269.202-269.202,269.202 c-36.376,0-71.058-7.231-102.71-20.308l0.856,46.769l57.945-6.362c13.289-1.459,26.214,4.94,33.11,16.394L204.647,512l47.001-34.483 c10.779-7.908,25.173-8.828,36.87-2.356l51.009,28.217l23.462-53.363c5.381-12.238,17.386-20.231,30.752-20.477l58.283-1.067 l-6.362-57.945c-1.459-13.289,4.94-26.214,16.394-33.11L512,307.353L477.517,260.351z"/> <path style="fill:#FFEB99;" d="M142.57,263.837c-4.328,0-7.837-3.509-7.837-7.837c0-66.867,54.401-121.267,121.267-121.267 c4.328,0,7.837,3.509,7.837,7.837c0,4.328-3.509,7.837-7.837,7.837c-58.225,0-105.593,47.368-105.593,105.593 C150.407,260.328,146.898,263.837,142.57,263.837z"/> </g>
+                    </svg>
+            </button>
+             <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/karaikal_final_house_level_4326.geojson')">
+                <span >Karaikal</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/mahuva_final_house_level_4326.geojson')">
+                <span >Mahuva</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/mangtoli_slum_final_house_level_4326.geojson')">
+                <span >Mangtoli Slum</span>
+                <svg height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier"> <path style="fill:#db6300;" d="M362.99,450.016l-23.462,53.363l-51.009-28.217c-11.699-6.471-26.091-5.552-36.87,2.356L204.647,512 l-30.066-49.942c-6.895-11.453-19.821-17.853-33.11-16.394l-57.945,6.362l-1.067-58.283c-0.245-13.366-8.238-25.372-20.477-30.752 L8.62,339.528l28.217-51.009c6.471-11.699,5.552-26.091-2.356-36.87L0,204.647l49.942-30.066 c11.453-6.895,17.853-19.821,16.394-33.11l-6.362-57.945l58.283-1.067c13.366-0.245,25.372-8.238,30.752-20.477L172.472,8.62 l51.009,28.217c11.699,6.471,26.091,5.552,36.87-2.356L307.353,0l30.066,49.942c6.895,11.453,19.821,17.853,33.11,16.394 l57.945-6.362l1.067,58.283c0.245,13.366,8.238,25.372,20.477,30.752l53.363,23.462l-28.217,51.009 c-6.471,11.699-5.552,26.091,2.356,36.87L512,307.353l-49.942,30.066c-11.453,6.895-17.853,19.821-16.394,33.11l6.362,57.945 l-58.283,1.067C380.376,429.784,368.371,437.778,362.99,450.016z"/> <circle style="fill:#ffb042;" cx="256" cy="256" r="169.566"/> <path style="opacity:0.11;fill:#663A00;enable-background:new ;" d="M477.517,260.351c-7.908-10.779-8.828-25.173-2.356-36.87 l28.217-51.009l-48.863-21.484c0.036,1.789,0.068,3.578,0.068,5.375c0,148.676-120.526,269.202-269.202,269.202 c-36.376,0-71.058-7.231-102.71-20.308l0.856,46.769l57.945-6.362c13.289-1.459,26.214,4.94,33.11,16.394L204.647,512l47.001-34.483 c10.779-7.908,25.173-8.828,36.87-2.356l51.009,28.217l23.462-53.363c5.381-12.238,17.386-20.231,30.752-20.477l58.283-1.067 l-6.362-57.945c-1.459-13.289,4.94-26.214,16.394-33.11L512,307.353L477.517,260.351z"/> <path style="fill:#FFEB99;" d="M142.57,263.837c-4.328,0-7.837-3.509-7.837-7.837c0-66.867,54.401-121.267,121.267-121.267 c4.328,0,7.837,3.509,7.837,7.837c0,4.328-3.509,7.837-7.837,7.837c-58.225,0-105.593,47.368-105.593,105.593 C150.407,260.328,146.898,263.837,142.57,263.837z"/> </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/mayur_vihar_final_house_level_4326.geojson')">
+                <span >Mayur Vihar</span>
+                <svg height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier"> <path style="fill:#db6300;" d="M362.99,450.016l-23.462,53.363l-51.009-28.217c-11.699-6.471-26.091-5.552-36.87,2.356L204.647,512 l-30.066-49.942c-6.895-11.453-19.821-17.853-33.11-16.394l-57.945,6.362l-1.067-58.283c-0.245-13.366-8.238-25.372-20.477-30.752 L8.62,339.528l28.217-51.009c6.471-11.699,5.552-26.091-2.356-36.87L0,204.647l49.942-30.066 c11.453-6.895,17.853-19.821,16.394-33.11l-6.362-57.945l58.283-1.067c13.366-0.245,25.372-8.238,30.752-20.477L172.472,8.62 l51.009,28.217c11.699,6.471,26.091,5.552,36.87-2.356L307.353,0l30.066,49.942c6.895,11.453,19.821,17.853,33.11,16.394 l57.945-6.362l1.067,58.283c0.245,13.366,8.238,25.372,20.477,30.752l53.363,23.462l-28.217,51.009 c-6.471,11.699-5.552,26.091,2.356,36.87L512,307.353l-49.942,30.066c-11.453,6.895-17.853,19.821-16.394,33.11l6.362,57.945 l-58.283,1.067C380.376,429.784,368.371,437.778,362.99,450.016z"/> <circle style="fill:#ffb042;" cx="256" cy="256" r="169.566"/> <path style="opacity:0.11;fill:#663A00;enable-background:new ;" d="M477.517,260.351c-7.908-10.779-8.828-25.173-2.356-36.87 l28.217-51.009l-48.863-21.484c0.036,1.789,0.068,3.578,0.068,5.375c0,148.676-120.526,269.202-269.202,269.202 c-36.376,0-71.058-7.231-102.71-20.308l0.856,46.769l57.945-6.362c13.289-1.459,26.214,4.94,33.11,16.394L204.647,512l47.001-34.483 c10.779-7.908,25.173-8.828,36.87-2.356l51.009,28.217l23.462-53.363c5.381-12.238,17.386-20.231,30.752-20.477l58.283-1.067 l-6.362-57.945c-1.459-13.289,4.94-26.214,16.394-33.11L512,307.353L477.517,260.351z"/> <path style="fill:#FFEB99;" d="M142.57,263.837c-4.328,0-7.837-3.509-7.837-7.837c0-66.867,54.401-121.267,121.267-121.267 c4.328,0,7.837,3.509,7.837,7.837c0,4.328-3.509,7.837-7.837,7.837c-58.225,0-105.593,47.368-105.593,105.593 C150.407,260.328,146.898,263.837,142.57,263.837z"/> </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/mundra_final_house_level_4326.geojson')">
+                <span >Mundra</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/nellore_final_house_level_4326.geojson')">
+                <span >Nellore</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/pondicherry_final_house_level_4326.geojson')">
+                <span >Pondicherry</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/porbandar_city_final_house_level_4326.geojson')">
+                <span >Porbandar</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/puri_final_house_level_4326.geojson')">
+                <span >Puri</span>
+                <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                    <polyline id="primary" points="4 9.71 12 4 20 9.71" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="primary-2" data-name="primary" d="M18,16V8.29m-12,0V16" style="fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary" d="M3,19.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    <path id="secondary-2" data-name="secondary" d="M3,15.5c1.5,0,1.5.5,3,.5s1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5,1.5.5,3,.5,1.5-.5,3-.5" style="fill: none; stroke: #2ca9bc; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+                    </g>
+                    </svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/rasulnagar_final_house_level_4326.geojson')">
+                <span >Rasulnagar</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/thiruvananthapuram_final_house_level_4326.geojson')">
+                <span >Thiruvananthapuram</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            <button id="loadDataButton" onclick="loadData('https://niticode.com/images/tiffdata/nagapattinam_final_house_level_4326.geojson')">
+                <span >Nagapattinam</span>
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="25px" height="25px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M232.824 13.738c-96.1 7.382-215.29 48.535-215.29 118.383 0 65.084 117.615 107.844 245.49 93.538 90.757-10.15 167.13-45.817 200.578-89.152-44.08 82.325-143.703 106.34-233.877 116.19 112.254 5.15 262.53-32.988 262.53-124.23 0-64.527-117.615-107.84-245.49-93.534C156.007 45.082 80.41 80.75 46.96 124.084c18.41-49.265 91.46-93.87 185.864-110.346zm56.04 40.864c77.387-.618 136.667 23.666 136.667 58.234 0 4.73-1.112 9.433-3.227 14.053-31.82-20.172-88.055-36.5-149.174-39.148-6.105-.264-12.257-.387-18.437-.353-2.06.01-4.122.038-6.187.085-51.472 1.157-104.23 13.43-145.113 44.86 5.022-36.577 75.142-70.428 160.92-76.728 8.347-.613 16.547-.942 24.552-1.005zm-34.036 51.482c5.848-.037 11.685.077 17.492.328 57.486 2.49 111.856 19.132 139.096 35.758-6.62 6.792-15.386 13.238-25.896 19.14-24.89-11.45-63.462-19.06-105.92-19.142-3.244-.006-6.51.032-9.795.115-44.026 1.117-91.184 10.864-128.448 36.09-15.823-6.824-27.48-15.514-33.54-25.562 38.834-33.478 93.327-46.39 147.01-46.726zm24.717 54.79c31.283.173 60.834 5.14 82.178 11.675-27.063 10.793-60.804 18.506-97.41 21.194-37.686 2.768-72.323-.243-99.774-7.51 31.234-16.912 69.26-24.342 105.74-25.267 3.1-.08 6.19-.11 9.265-.092zM81.873 230.83c5.158 4.435 10.285 8.583 15.387 12.445.127.237.264.472.39.71l.592.023c61.57 46.215 119.69 52.326 188.065 51.99.002 0 .005 0 .007-.002v.002h-.007c-73.987 20.576-134.236 19.522-185.5-8.316 74.926 98.107 242.27 52.573 335.22-46.637-43.032 23.107-110.06 35.868-185.318 31.842-66.24-3.544-126.098-19.41-168.837-42.057zM324.55 335.342c-67.937 33.614-143.89 42.532-199.144 11.236 4.907 16.882 14.784 28.156 28.295 35.658 15.565 8.643 36.38 11.85 59 9.55 34.243-3.485 72.07-19.68 100.767-45.057 3.635-3.794 7.342-7.59 11.084-11.388zm-62.306 63.68c-15.773 5.91-31.93 9.757-47.652 11.357-23.025 2.342-45.308-.15-64.108-8.835 15.125 14.916 32.064 25.36 47.95 30.023 15.676 4.604 29.844 3.767 41.142-2.59 9.392-5.284 17.44-14.62 22.668-29.955zM139.22 416.985c7.508 25.64 18.886 51.543 38.15 77.282h38.546c.632-.79 1.39-1.33 1.75-2.364 5.113-14.602 11.056-28.235 17.715-41.15-13.33 3.696-27.91 2.948-42.212-1.252-18.734-5.5-37.433-16.752-53.95-32.516z"/></svg>
+            </button>
+            </div>
+          </div>
+          
+          <script>
+          function buttonClicked(buttonText) {
+            alert(buttonText + ' clicked');
+          }
+          </script>
+          
+
+        <div id="info-container">
+        </div>
+
+    </div>
+
+    <div id="legend">
+        <div class="bg-purple-700 text-white">
+            <div class="mx-1 my-1 legend-item">
+                <div style="background-color: rgb( 237, 7, 7 );"></div>
+                <span>High Risk</span>
+            </div>
+            <div class="mx-1 my-1 legend-item">
+                <div style="background-color: rgb( 237, 145, 7 );"></div>
+                <span>Medium Risk</span>
+            </div>
+            <div class="mx-1 my-1 legend-item">
+                <div style="background-color: rgb( 236, 252, 3 );"></div>
+                <span>Low Risk</span>
+            </div>
+            <div class="mx-1 my-1 legend-item">
+                <div style="background-color: rgb( 104, 255, 17);"></div>
+                <span>No Risk</span>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let map;
+
+        async function initMap() {
+            const { Map,InfoWindow } = await google.maps.importLibrary("maps");
+
+            map = new Map(document.getElementById("map"), {
+                center: { lat: 25.397, lng: 77.644 },
+                zoom: 5,
+                mapTypeId: 'hybrid',
+                minZoom: 3,
+                zoomControl: false,
+                mapTypeControl: true,
+                fullscreenControl: false,
+                mapTypeControlOptions: {
+                    // Show the map type control with satellite view
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    mapTypeIds: ["roadmap", "terrain", "satellite", "hybrid"],
+                    position: google.maps.ControlPosition.TOP_LEFT,
+                  },
+            });
+
+            
+
+
+
+            infoWindow = new InfoWindow();
+            const legend = document.getElementById('legend');
+            map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+        }
+
+        async function loadData(url) {
+            map.data.forEach(function(feature) {
+                map.data.remove(feature);
+            });
+            const response = await fetch(url);
+            
+            const geojsonData = await response.json();
+            console.log(geojsonData);
+            let high=0;
+            let moderate=0;
+            let low=0;
+            let no=0;
+            let total_area=0;
+            for(let i in geojsonData.features){
+                if (geojsonData.features[i].properties.risk_score<=5&&geojsonData.features[i].properties.risk_score>4){
+                    high=high+1;
+                }else if (geojsonData.features[i].properties.risk_score<=4&&geojsonData.features[i].properties.risk_score>3){
+                    moderate=moderate+1;
+                }else if (geojsonData.features[i].properties.risk_score<=3&&geojsonData.features[i].properties.risk_score>2){
+                    low=low+1;
+                }else if (geojsonData.features[i].properties.risk_score<=2){
+                    no=no+1;
+                };
+                total_area=total_area+geojsonData.features[i].properties.area;
+            }
+            total_area=total_area/1000000;
+            map.data.addGeoJson(geojsonData);
+            const tileinfo=`
+            <div style="background-color:#7e22ce;border-radius:12px; border:white;border: 1px solid #ccc;">
+                <h4 style="margin-left:10px;margin-right:10px;margin-top:15px;">Disaster Type:${geojsonData.disaster.charAt(0).toUpperCase() +
+                    geojsonData.disaster.slice(1)} </h4>
+                <h4 style="margin-left:10px;margin-right:10px;margin-top:15px;">Number of Buildings: ${geojsonData.features.length.toLocaleString("en-IN")}</h4>
+                <p style="margin-left:10px;margin-right:10px;margin-top:15px;">Total Area: ${total_area.toFixed(2)} sq. km</p>
+                <table style="margin-left:10px;margin-right:10px;margin-top:15px;">
+                    <tr style="margin-left:10px;margin-right:10px;margin-top:5px;">
+                        <th>Risk Score</th>
+                        <th>No of Buildings</th>
+                    </tr>
+                    <tr style="margin-left:10px;margin-right:10px;margin-top:5px;">
+                        <td>0 - 2</td>
+                        <td style="margin-left:20px;">${no.toLocaleString("en-IN")}</td>
+                    </tr>
+                    <tr style="margin-left:10px;margin-right:10px;margin-top:5px;">
+                        <td>2 - 3</td>
+                        <td>${low.toLocaleString("en-IN")}</td>
+                    </tr>
+                    <tr style="margin-left:10px;margin-right:10px;margin-top:5px;">
+                        <td>3 - 4</td>
+                        <td>${moderate.toLocaleString("en-IN")}</td>
+                    </tr>
+                    <tr style="margin-left:10px;margin-right:10px;margin-top:5px;">
+                        <td>4 - 5</td>
+                        <td>${high.toLocaleString("en-IN")}</td>
+                    </tr>
+                </table>
+            </div>
+            `
+            document.getElementById('info-container').innerHTML=tileinfo;
+
+            map.data.addListener('click', function(event) {
+                const feature = event.feature;
+                const properties = feature.Gg;
+                let roof_type="";
+                if(properties.label=="1"){roof_type= "RCC";}else if(properties.label=="2"){roof_type= "CGI_1S";}else if(properties.label=="3"){roof_type= "CGI_2S";}else if(properties.label=="4"){roof_type= "CGI_4S";}else if(properties.label=="5"){roof_type= "TILE_2S";}else if(properties.label=="6"){roof_type= "TILE_4S";}else if(properties.label=="7"){roof_type= "TARP"};
+                const infoContent = `
+                <div style="background-color:#7e22ce;color:white;">
+                    <h4 style="margin-top=5px;margin-bottom:5px;margin-left:5px;margin-right:5px;">Area:${properties.area} sq.m</h4>
+                    <p style="margin-top=5px;margin-bottom:5px;margin-left:5px;margin-right:5px;">Risk Score: ${properties.risk_score}</p>
+                    <p style="margin-top=5px;margin-bottom:5px;margin-left:5px;margin-right:5px;">Roof Type: ${roof_type}</p>
+                </div>
+                `;
+
+                infoWindow.setContent(infoContent);
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(map);
+            });
+
+            
+            zoom(map);
+            map.data.setStyle(function (feature) {
+                var ascii = feature.getProperty('risk_score');
+                var color = ' rgb( 104, 255, 17)';
+                if (ascii < 2) {
+                    color = 'rgb( 104, 255, 17)';
+                } else if (ascii < 3) {
+                    color = 'rgb( 104, 255, 17)';
+                } else if (ascii < 4) {
+                    color = 'rgb( 236, 252, 3 )';
+                } else if (ascii < 5) {
+                    color = 'rgb( 237, 145, 7 )';
+                } else {
+                    color = 'rgb( 237, 7, 7 )';
+                }
+
+                return {
+                    fillColor: color,
+                    fillOpacity: 0.6,
+                    strokeWeight: 2
+                };
+            });
+
+            
+        }
+
+        function zoom(map) {
+            const bounds = new google.maps.LatLngBounds();
+
+            map.data.forEach((feature) => {
+                const geometry = feature.getGeometry();
+
+                if (geometry) {
+                    processPoints(geometry, bounds.extend, bounds);
+                }
+            });
+            map.fitBounds(bounds);
+        }
+
+        function processPoints(geometry, callback, thisArg) {
+            if (geometry instanceof google.maps.LatLng) {
+                callback.call(thisArg, geometry);
+            } else if (geometry instanceof google.maps.Data.Point) {
+                callback.call(thisArg, geometry.get());
+            } else {
+                geometry.getArray().forEach((g) => {
+                    processPoints(g, callback, thisArg);
+                });
+            }
+        }
+
+
+        initMap();
+    </script>
+</body>
+
+</html>

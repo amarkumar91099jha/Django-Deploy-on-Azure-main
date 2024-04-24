@@ -229,3 +229,5 @@ def buildingAddress_details(request,building_id):
         "building_detail":building_details
     })
 
+def MapView(request):
+    return render(request,"azure_content/Map.html")
