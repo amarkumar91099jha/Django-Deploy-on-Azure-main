@@ -7,6 +7,18 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 from .models import *
 
+# myapp/views.py
+from django.http import JsonResponse
+import os
+import geojson
+
+def geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/chennai_final_house_level_4326.geojson')
+    with open(geojson_file, 'r') as f:
+        geojson_data = geojson.load(f)
+    return JsonResponse(geojson_data, safe=False)
+
+
 class HomeView(ListView):
     context_object_name = 'project_list'
     model = BuildingAddress
