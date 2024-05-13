@@ -3,7 +3,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
-from django_otp.forms import OTPAuthenticationFormMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -33,19 +32,3 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('email', 'name', 'organization', 'user_type', 'linkedin_url', 'password1', 'password2')
 
 
-class EmailOTPAuthenticationForm(OTPAuthenticationFormMixin, forms.Form):
-    otp_device = 'otp_device'
-    otp_challenge = 'otp_challenge'
-    otp_token = forms.CharField(required=True)
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.fields['otp_token'].label = 'OTP'
-
-    def clean(self):
-        self.cleaned_data = super().clean()
-        self.cleaned_data[self.otp_device] = self.get_device()
-        return self.cleaned_data
-
-    def get_user(self):
-        return self.user
