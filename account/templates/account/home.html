@@ -1,0 +1,194 @@
+<!doctype html>
+{%load static%}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{%block title%}DRF-Main{%endblock%}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <!-- Leaflet CSS and JS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    
+        <!-- Custom CSS for map container -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'Register/main.css'%}">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="//kit.fontawesome.com/b68b3cc9f2.js?ver=5.2.4"></script>
+        <script src="https://kit.fontawesome.com/f44bd2967c.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+        <style>
+    
+            .sticky-container {
+                position: absolute;
+                top: 100px; /* Adjust the distance from the top as needed */
+                z-index: 1000; /* Ensure it's above the map */
+            }
+            .bg-purple{
+              background-color: black;
+              color:white;
+            }
+            .bg-purple:hover{
+              background-color: #003366;
+              color:black;
+            }
+                            
+        </style>
+    
+    {%block style%}{%endblock%}
+      </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-purple fixed-top" >
+        <div class="container">
+          <a class="navbar-brand" href="https://www.seedsindia.org/"><img src="https://www.seedsindia.org/assets/img/logo/seedslogo.png"/></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div  class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="#">About Us</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Resources
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " href="#">Submissions</a>
+              </li>
+              
+            </ul>
+            <!-- Power button added to the right corner -->
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button  class="dropbtn"> <i class="fas fa-user-circle mr-1"></i> USER </button>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="loginDropdown" style="min-width:120px;">
+                    
+                  {% if user.is_authenticated %}
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+                  <li><a class="dropdown-item" href="{%url 'login' %}">Login</a></li>
+                  <li><a class="dropdown-item" href="{%url 'register' %}">Register</a></li>
+              {% endif %}                  
+                  
+                  <!-- Add more login options as needed -->
+                </ul>
+              </div>
+          </div>
+        </div>
+      </nav>
+      <div style="margin-top:120px">
+      {%block content%}
+      <div class="card" id="map-container" style="margin-top:-55px">
+        <div class="card-body p-0">
+            <div id="map" style="height:620px;"></div>
+            <div class="sticky-container"style="margin-left:40px;">
+              {% if user.is_authenticated %}
+                <a href="#" class="btn bg-purple btn-block mb-2">Start Survey</a>
+              {% else %}
+                <a href="#" class="btn btn-secondary btn-block mb-2">Login to start the survey</a>
+              {%endif%}
+            </div>
+        </div>
+    </div>
+    <!-- Leaflet Script -->
+<script>
+  // Initialize the map
+  // Initialize map
+  var map = L.map('map', {
+    zoomControl: false // Disabling the default zoom control
+}).setView([28.6195, 77.3149], 5); 
+
+// Base layers
+var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+});
+
+var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    maxZoom: 15,
+    minZoom:3,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    attribution: '© Google contributors',
+}).addTo(map);
+
+// Feature group for markers
+var markerGroup = L.featureGroup().addTo(map);
+
+// Marker cluster group
+var markers = L.markerClusterGroup().addTo(map);
+
+// Layer group for polygons
+var polygonGroup = L.layerGroup();
+
+// Initialize marker and polygon variables
+var marker, polygon;
+var polygonCoords=[[]];
+
+// Add markers and polygons from addresses data
+var addresses = JSON.parse('{{ address | escapejs }}');
+console.log(addresses)
+addresses.forEach(function(address) {
+    var popupContent = `
+        <div>
+            <h2>ID: ${address.id}</h2>
+            <p>Address: ${address.address}</p>
+        </div>
+    `;
+    let cord=[address.latitude, address.longitude];
+    polygonCoords[0].push(cord);
+    marker = L.marker([address.latitude, address.longitude]).bindPopup(popupContent);
+    {% comment %} markerGroup.addLayer(marker); {% endcomment %}
+    markers.addLayer(marker);
+});
+
+// Add polygons
+// Example polygons, replace with your own data
+{% comment %} var polygonCoords = [
+    [[51.5, -0.1], [51.51, -0.06], [51.52, -0.1]],
+    [[51.49, -0.06], [51.5, -0.1], [51.51, -0.06]]
+]; {% endcomment %}
+
+polygonCoords.forEach(function(coords) {
+    polygon = L.polygon(coords).bindPopup('Polygon');
+    polygonGroup.addLayer(polygon);
+});
+
+// Overlay layers
+var overlayLayers = {
+    'Marker Clusters': markers,
+    'Polygons': polygonGroup
+};
+
+// Base layers
+var baseLayers = {
+    'OpenStreetMap': osmLayer,
+    'Satellite': satelliteLayer
+};
+
+// Add layers control
+L.control.layers(baseLayers, overlayLayers).addTo(map);
+
+</script>
+
+{%endblock%}
+  </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

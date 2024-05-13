@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+    <style>
+        #map {
+            height: 550px;
+        }
+        .navbar-purple {
+            background-color: #6F53E5;
+        }
+        .map-header {
+            text-align: center;
+            color: white;
+            background-color: #6F53E5;
+        }
+
+        .dropdown-menu {
+            left: auto !important;
+            right: 0;
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-purple">
+        <a class="navbar-brand" href="{%url 'landing'%}" style="color:white;">Ground Truthing App!</a>
+
+        <!-- Toggle button for small screens -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<!-- Links for large screens -->
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white;">
+            USER
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{%url 'login' %}">Login</a>
+            <a class="dropdown-item" href="{%url 'register'%}">Registration</a>
+        </div>
+    </li>
+</ul>
+</div>
+    </nav>
+    
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header map-header">
+                        About
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="about">
+                            <h4>What is Lorem Ipsum?</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                            </p>
+                            <h4>Where does it come from?</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..".
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header map-header">
+                        Coverage Map
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %} <div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            Map Example
+        </div>
+        <div class="card-body p-0">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+ {% endcomment %}
+<!-- Bootstrap JS, Leaflet JS, and Leaflet Marker Cluster JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+
+<script>
+    // Initialize the map
+    var map = L.map('map', {
+        zoomControl: false // Disable default zoom control
+    }).setView([28.6195, 77.3149], 5);
+
+    // Base layers
+    var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    });
+
+    var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google contributors'
+    }).addTo(map);
+
+    // Marker cluster group
+    var markers = L.markerClusterGroup().addTo(map);
+
+    // Initialize marker variables
+    var marker;
+
+    // Add markers from addresses data
+    var addresses = JSON.parse('{{ address | escapejs }}');
+    addresses.forEach(function(address) {
+        var popupContent = `
+            <div>
+                <h2>ID: ${address.id}</h2>
+                <p>Address: ${address.address}</p>
+            </div>
+        `;
+        marker = L.marker([address.latitude, address.longitude]).bindPopup(popupContent);
+        markers.addLayer(marker);
+    });
+
+    // Overlay layers
+    var overlayLayers = {
+        'Marker Clusters': markers
+    };
+
+    // Base layers
+    var baseLayers = {
+        'OpenStreetMap': osmLayer,
+        'Satellite': satelliteLayer
+    };
+
+    // Add layers control
+    L.control.layers(baseLayers, overlayLayers).addTo(map);
+</script>
+
+</body>
+</html>

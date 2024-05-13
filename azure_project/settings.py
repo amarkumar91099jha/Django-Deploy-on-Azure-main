@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2#p9z0-d=39&qbu#&f1p6m=2+j!a4_n_r9q%wz192hfwva&24^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'azure_content.apps.AzureContentConfig', 
+    'account.apps.AccountConfig',
     
 ]
 
@@ -116,3 +117,14 @@ STATIC_URL = '/azure_content/static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'account.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # or your SMTP port
+EMAIL_USE_TLS = True  # or False if not using TLS
+EMAIL_HOST_USER = 'amarkumar555999abc@gmail.com'  # your email username
+EMAIL_HOST_PASSWORD = 'lcqbevgbkzfqomok'  # your email password
+DEFAULT_FROM_EMAIL = 'amarkumar555999abc@gmail.com'  # your default sender email
+

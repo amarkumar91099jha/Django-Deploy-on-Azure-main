@@ -11,6 +11,8 @@ from .models import *
 from django.http import JsonResponse
 import os
 import geojson
+from django.contrib.auth.decorators import login_required
+
 
 def geojson_view(request):
     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/chennai_final_house_level_4326.geojson')
@@ -19,17 +21,23 @@ def geojson_view(request):
     return JsonResponse(geojson_data, safe=False)
 
 
-class HomeView(ListView):
-    context_object_name = 'project_list'
-    model = BuildingAddress
-    template_name = "azure_content/home.html"
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        addresses = BuildingAddress.objects.all().values()
-        addresses_json = json.dumps(list(addresses), cls=DjangoJSONEncoder)
-        context['address'] = addresses_json
-        return context
+def LandingView(request):
+    project_list = BuildingAddress.objects.all()
+    addresses_json = json.dumps(list(project_list.values()), cls=DjangoJSONEncoder)
+    return render(request, "azure_content/landing.html",{
+        'address': addresses_json,
+        'project_list': project_list,
+    })
 
+@login_required
+def home_view(request):
+    project_list = BuildingAddress.objects.all()
+    addresses_json = json.dumps(list(project_list.values()), cls=DjangoJSONEncoder)
+    context = {
+        'project_list': project_list,
+        'address': addresses_json,
+    }
+    return render(request, "azure_content/home.html", context)
 class AboutView(TemplateView):
     template_name = "azure_content/about.html"
 
@@ -210,7 +218,7 @@ def CustomerView(request, building_id):
         "building_id":building_location.id
     })
 
-
+@login_required
 def buildingAddress_details(request,building_id):
     building_detail=BuildingAddress.objects.get(id=building_id)
     if building_detail.customer_type=="Resilience AI Customer":
