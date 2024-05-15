@@ -29,7 +29,7 @@ def LandingView(request):
         'project_list': project_list,
     })
 
-@login_required
+# @login_required
 def home_view(request):
     project_list = BuildingAddress.objects.all()
     addresses_json = json.dumps(list(project_list.values()), cls=DjangoJSONEncoder)
