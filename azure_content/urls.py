@@ -15,6 +15,7 @@ urlpatterns = [
     path('individual/<int:building_id>/',IndividualView, name='individual-views'),
     path('customer/<int:building_id>/',CustomerView, name='resiliance-views'),
     path('geojson/', geojson_view, name='geojson_view'),
-    path('map/',MapView, name="map-view")
-
+    path('map/',MapView, name="map-view"),
+    path('export/csv/', export_csv, name='export_csv'),
 ]
+

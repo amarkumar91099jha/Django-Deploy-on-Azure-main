@@ -6,6 +6,8 @@ from django.views.generic.list import ListView
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 from .models import *
+from django.http import HttpResponse
+import csv
 
 # myapp/views.py
 from django.http import JsonResponse
@@ -239,3 +241,37 @@ def buildingAddress_details(request,building_id):
 
 def MapView(request):
     return render(request,"azure_content/Map.html")
+
+def export_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="combined_data.csv"'
+
+    writer = csv.writer(response)
+    # Write the header row
+    writer.writerow([
+        'Latitude', 'Longitude', 'Address', 'Customer Type', 'Building Created At', 'Building Updated At',
+        'Individual Q1', 'Individual Q2', 'Individual Q3', 'Individual Q4', 'Individual Q5',
+        'Individual Q6', 'Individual Q7', 'Individual Q8', 'Individual Q9',
+        'Resilience Q1', 'Resilience Q2', 'Resilience Q3', 'Resilience Q4', 'Resilience Q5',
+        'Resilience Q6', 'Resilience Q7', 'Resilience Q8', 'Resilience Q9', 'Resilience Q10',
+        'Resilience Q11', 'Resilience Q12', 'Resilience Q13', 'Resilience Q14', 'Resilience Q15',
+        'Resilience Q16', 'Resilience Q17', 'Resilience Q18', 'Resilience Q19', 'Resilience Q20', 'Resilience Q21'
+    ])
+
+    # Fetch data from the database
+    for building in BuildingAddress.objects.all():
+        individual_data = IndividualCustomerData.objects.filter(building_id=building).first()
+        resilience_data = ResilianceCustomerData.objects.filter(building_id=building).first()
+
+        writer.writerow([
+            building.latitude, building.longitude, building.address, building.customer_type, building.created_at, building.updated_at,
+            individual_data.question_1 if individual_data else '', individual_data.question_2 if individual_data else '', individual_data.question_3 if individual_data else '', individual_data.question_4 if individual_data else '', individual_data.question_5 if individual_data else '',
+            individual_data.question_6 if individual_data else '', individual_data.question_7 if individual_data else '', individual_data.question_8 if individual_data else '', individual_data.question_9 if individual_data else '',
+            resilience_data.question_1 if resilience_data else '', resilience_data.question_2 if resilience_data else '', resilience_data.question_3 if resilience_data else '', resilience_data.question_4 if resilience_data else '', resilience_data.question_5 if resilience_data else '',
+            resilience_data.question_6 if resilience_data else '', resilience_data.question_7 if resilience_data else '', resilience_data.question_8 if resilience_data else '', resilience_data.question_9 if resilience_data else '', resilience_data.question_10 if resilience_data else '',
+            resilience_data.question_11 if resilience_data else '', resilience_data.question_12 if resilience_data else '', resilience_data.question_13 if resilience_data else '', resilience_data.question_14 if resilience_data else '', resilience_data.question_15 if resilience_data else '',
+            resilience_data.question_16 if resilience_data else '', resilience_data.question_17 if resilience_data else '', resilience_data.question_18 if resilience_data else '', resilience_data.question_19 if resilience_data else '', resilience_data.question_20 if resilience_data else '', resilience_data.question_21 if resilience_data else ''
+        ])
+
+    return response
