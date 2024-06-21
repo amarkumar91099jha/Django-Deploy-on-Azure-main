@@ -17,6 +17,8 @@ urlpatterns = [
     path('geojson/', geojson_view, name='geojson_view'),
     path('merut_geojson/', merut_geojson_view, name='merut_geojson_view'),
     path('lucknow_geojson/', lucknow_geojson_view, name='lucknow_geojson_view'),
+    path('baramullah_geojson/', baramullah_geojson_view, name='baramullah_geojson_view'),
+    path('katra_geojson/', katra_geojson_view, name='katra_geojson_view'),
 
     path('map/',MapView, name="map-view"),
     path('export/csv/', export_csv, name='export_csv'),
