@@ -16,6 +16,26 @@ import geojson
 from django.contrib.auth.decorators import login_required
 
 
+
+def lucknow_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/lucknow_floood_final.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+def merut_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/meerut_flood_final.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+
 def geojson_view(request):
     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/chennai_final_house_level_4326.geojson')
     if os.path.exists(geojson_file):
