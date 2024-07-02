@@ -23,6 +23,11 @@ urlpatterns = [
     path('baramullah_geojson/', baramullah_geojson_view, name='baramullah_geojson_view'),
     path('katra_geojson/', katra_geojson_view, name='katra_geojson_view'),
 
+    path('mallofindia_flood_geojson/', mallofindia_flood_geojson_view, name='mallofindia_flood_geojson_view'),
+    path('mallofindia_heatwave_geojson/', mallofindi_heatwave_geojson_view, name='mallofindi_heatwave_geojson_view'),
+    path('montera_flood_geojson/', montera_flood_geojson_view, name='montera_flood_geojson_view'),
+    path('montera_heatwave_geojson/', montera_heatwave_geojson_view, name=' montera_heatwave_geojson_view'),
+
     path('map/',MapView, name="map-view"),
     path('export/csv/', export_csv, name='export_csv'),
 ]
