@@ -514,7 +514,7 @@
             const response = await fetch(url);
             
             const geojsonData = await response.json();
-            console.log(geojsonData);
+            {% comment %} console.log(geojsonData); {% endcomment %}
             let very_high=0;
             let high=0;
             let moderate=0;
@@ -538,7 +538,7 @@
             total_area=total_area/1000000;
             map.data.addGeoJson(geojsonData);
             let name = geojsonData.name || " _final";
-            console.log(name);
+            {% comment %} console.log(name); {% endcomment %}
             let name_f=name.split('_final');
             const tileinfo=`
             <div style="background-color:#7e22ce;border-radius:12px; border:white;border: 1px solid #ccc;">
@@ -604,7 +604,8 @@
 
             map.data.addListener('click', function(event) {
                 const feature = event.feature;
-                const properties = feature.Gg;
+                {% comment %} console.log(feature); {% endcomment %}
+                const properties = feature.Fg;
                 let roof_type="";
                 if(properties.label=="1"){roof_type= "RCC";}else if(properties.label=="2"){roof_type= "CGI_1S";}else if(properties.label=="3"){roof_type= "CGI_2S";}else if(properties.label=="4"){roof_type= "CGI_4S";}else if(properties.label=="5"){roof_type= "TILE_2S";}else if(properties.label=="6"){roof_type= "TILE_4S";}else if(properties.label=="7"){roof_type= "TARP"};
                 const infoContent = `
