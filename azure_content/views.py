@@ -14,6 +14,163 @@ from django.http import JsonResponse
 import os
 import geojson
 from django.contrib.auth.decorators import login_required
+# decathalone--------------------------------------------------------
+#flood---------------------------------------------------------------
+def ahemdabad_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/ahemdabad_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def anubhava_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/anubhava_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def bangalore_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/bangalore_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def nolumbur_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/nolumbur_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def teynampet_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/teynampet_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def zirkapur_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone_flood/Zirkapur_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+
+
+#heatwave------------------------------------------------------------
+def ahemdabad_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/ahemdabad_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def anubhava_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/anubhava_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def bangalore_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/bangalore_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def nolumbur_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/nolumbur_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def teynampet_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/teynampet_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def zirkapur_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Decathlone/Zirkapur_final_house_level_4326.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+
+
+#new----------------azure_content/
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def mallofindi_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mallofindia_Heatwave.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+
+
 
 # new files
 def mallofindia_flood_geojson_view(request):
@@ -52,69 +209,69 @@ def montera_heatwave_geojson_view(request):
 
 # -------------------------------------------
 
-def lucknow_flood_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/lucknow_floood_final.geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def lucknow_flood_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/lucknow_floood_final.geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
-def merut_flood_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/meerut_flood_final.geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def merut_flood_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/meerut_flood_final.geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
 
-def geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/chennai_final_house_level_4326.geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/chennai_final_house_level_4326.geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
-def merut_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/merut_final_house_level_4326 .geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def merut_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/merut_final_house_level_4326 .geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
-def lucknow_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Lucknow_final_house_level_4326 .geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def lucknow_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Lucknow_final_house_level_4326 .geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
     
-def katra_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Katra_final_house_level_4326.geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def katra_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Katra_final_house_level_4326.geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
-def baramullah_geojson_view(request):
-    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/baramullah_final_house_level_4326 .geojson')
-    if os.path.exists(geojson_file):
-        with open(geojson_file, 'r') as f:
-            geojson_data = json.load(f)
-        return JsonResponse(geojson_data, safe=False)
-    else:
-        return HttpResponse("File not found.", status=404)
+# def baramullah_geojson_view(request):
+#     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/baramullah_final_house_level_4326 .geojson')
+#     if os.path.exists(geojson_file):
+#         with open(geojson_file, 'r') as f:
+#             geojson_data = json.load(f)
+#         return JsonResponse(geojson_data, safe=False)
+#     else:
+#         return HttpResponse("File not found.", status=404)
 
 
 def LandingView(request):
