@@ -43,6 +43,7 @@ urlpatterns = [
     path('teynampet_heatwave_geojson/', teynampet_heatwave_geojson_view, name='teynampet_heatwave_geojson_view'),
     path('zirkapur_heatwave_geojson/', zirkapur_heatwave_geojson_view, name='zirkapur_heatwave_geojson_view'),
 
+    path('mumbai_geojson/', mumbai_geojson_view, name='mumbai_geojson_view'),
 
     path('map/',MapView, name="map-view"),
     path('export/csv/', export_csv, name='export_csv'),
