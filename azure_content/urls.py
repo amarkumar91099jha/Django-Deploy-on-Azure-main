@@ -44,6 +44,9 @@ urlpatterns = [
     path('zirkapur_heatwave_geojson/', zirkapur_heatwave_geojson_view, name='zirkapur_heatwave_geojson_view'),
 
     path('mumbai_geojson/', mumbai_geojson_view, name='mumbai_geojson_view'),
+    path('hyd_final_heatwave_geojson/', hydrabad_heatwave_geojson_view, name='hydrabad_heatwave_geojson_view'),
+    path('hyd_final_flood_geojson/', hydrabad_flood_geojson_view, name='hydrabad_flood_geojson_view'),
+
 
     path('map/',MapView, name="map-view"),
     path('export/csv/', export_csv, name='export_csv'),
