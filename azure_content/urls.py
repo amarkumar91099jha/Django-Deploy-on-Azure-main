@@ -46,6 +46,11 @@ urlpatterns = [
     path('mumbai_geojson/', mumbai_geojson_view, name='mumbai_geojson_view'),
     path('hyd_final_heatwave_geojson/', hydrabad_heatwave_geojson_view, name='hydrabad_heatwave_geojson_view'),
     path('hyd_final_flood_geojson/', hydrabad_flood_geojson_view, name='hydrabad_flood_geojson_view'),
+    path('kerala_flood_geojson/',kerala_flood_geojson_view, name='kerala_flood_geojson_view'),
+    path('kerala_heat_geojson/', kerala_heatwave_geojson_view, name='kerala_heatwave_geojson_view'),
+    path('rajasthan_flood_geojson/', rajasthan_flood_geojson_view, name='rajasthan_flood_geojson_view'),
+    path('rajasthan_heat_geojson/', rajasthan_heatwave_geojson_view, name='rajasthan_heatwave_geojson_view'),
+
 
 
     path('map/',MapView, name="map-view"),

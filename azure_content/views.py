@@ -15,6 +15,45 @@ import os
 import geojson
 from django.contrib.auth.decorators import login_required
 
+
+# Mahindra ---------------------------------------------------------------
+def kerala_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Mahindra/kerala_flood.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+def kerala_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Mahindra/kerala_Heat.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+def rajasthan_flood_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Mahindra/rajasthan_flood.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+def rajasthan_heatwave_geojson_view(request):
+    geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/Mahindra/rajasthan_heat.geojson')
+    if os.path.exists(geojson_file):
+        with open(geojson_file, 'r') as f:
+            geojson_data = json.load(f)
+        return JsonResponse(geojson_data, safe=False)
+    else:
+        return HttpResponse("File not found.", status=404)
+
+
+# ------------------------------------------------------------------------
 def mumbai_geojson_view(request):
     geojson_file = os.path.join(os.path.dirname(__file__), 'static/azure_content/mumbai_final.geojson')
     if os.path.exists(geojson_file):
