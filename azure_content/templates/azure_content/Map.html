@@ -176,6 +176,73 @@
         <div class="dropdown">
             <button class="dropbtn">Select Region</button>
             <div class="dropdown-content">
+                <button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/AvMahatmaGandhi_final_house_level_4326.geojson')">
+                    <span >AvMahatmaGandhi</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button>
+                <button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/Bertioga_final_house_level_4326.geojson')">
+                    <span >Bertioga</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/Bertioga1_final_house_level_4326.geojson')">
+                    <span >Bertioga1</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/Bertioga2_final_house_level_4326.geojson')">
+                    <span >Bertioga2</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/CidadeDutra_final_house_level_4326.geojson')">
+                    <span >CidadeDutra</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/FrancodaRocha_final_house_level_4326.geojson')">
+                    <span >FrancodaRocha</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/Gauruja_final_house_level_4326.geojson')">
+                    <span >Gauruja</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/Jardim1_final_house_level_4326.geojson')">
+                    <span >Jardim1</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/jardim3_final_house_level_4326.geojson')">
+                    <span >Jardim3</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/SaoSebastiao_final_house_level_4326.geojson')">
+                    <span >SaoSebastiao</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button>
+                {% comment %} heat {% endcomment %}
+                <button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/AvMahatmaGandhi_final_house_level_4326.geojson')">
+                    <span >AvMahatmaGandhi</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/Bertioga_final_house_level_4326.geojson')">
+                    <span >Bertioga</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/Bertioga1_final_house_level_4326.geojson')">
+                    <span >Bertioga1</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/Bertioga2_final_house_level_4326.geojson')">
+                    <span >Bertioga2</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/CidadeDutra_final_house_level_4326.geojson')">
+                    <span >CidadeDutra</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/FrancodaRocha_final_house_level_4326.geojson')">
+                    <span >FrancodaRocha</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/Gauruja_final_house_level_4326.geojson')">
+                    <span >Gauruja</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/Jardim1_final_house_level_4326.geojson')">
+                    <span >Jardim1</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/jardim3_final_house_level_4326.geojson')">
+                    <span >Jardim3</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button><button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-heatwave/SaoSebastiao_final_house_level_4326.geojson')">
+                    <span >SaoSebastiao</span>
+                    <img src="{% static 'azure_content/heat.svg' %}" alt="Logo" class="logo">
+                </button>
+
+                
+
                 <button id="loadDataButton" onclick="loadData('https://ressolv-test-app.azurewebsites.net/kerala_flood_geojson/')">
                     <span >Kerala</span>
                     <svg fill="#000000" width="25px" height="25px" viewBox="0 0 24 24" id="flood" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
