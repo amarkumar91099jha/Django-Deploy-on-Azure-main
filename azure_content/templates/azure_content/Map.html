@@ -176,6 +176,10 @@
         <div class="dropdown">
             <button class="dropbtn">Select Region</button>
             <div class="dropdown-content">
+                <button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/sunnylive-geojson/godowlia_final_house_level_4326 1.geojson')">
+                    <span >Godowlia</span>
+                    <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
+                </button>
                 <button id="loadDataButton" onclick="loadData('https://seedsheatwave.blob.core.windows.net/hackathon-flood/gangtok_final.geojson')">
                     <span >Gangtok</span>
                     <img src="{% static 'azure_content/flood.svg' %}" alt="Logo" class="logo">
